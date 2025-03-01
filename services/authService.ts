@@ -7,6 +7,7 @@ export const registerUser = async (data: RegisterFormValues) => {
   try {
     const response = await axios.post("/api/auth/register", data, {
       headers: { "Content-Type": "application/json" },
+      withCredentials: true,
     });
 
     return { success: true, data: response.data };
@@ -27,6 +28,7 @@ export const loginUser = async (data: LoginFormValues) => {
   try {
     const response = await axios.post("/api/auth/login", data, {
       headers: { "Content-Type": "application/json" },
+      withCredentials: true,
     });
 
     const { token } = response.data;

@@ -5,15 +5,26 @@ export default async function middleware(req: NextRequest) {
   const token = req.cookies.get("jwt")?.value;
   const isLoggedIn = !!token;
 
+  console.log("isLoggedIn : ", isLoggedIn);
+
   const protectedPaths = ["/dashboard"];
+  const publicPath = ["/"];
+  const authPages = ["/login", "/register"];
+
   const isProtectedRoute = protectedPaths.some((path) =>
     req.nextUrl.pathname.startsWith(path)
   );
-
-  const authPages = ["/login", "/register"];
+  const isPublicPath = publicPath.some(
+    (path) =>
+      req.nextUrl.pathname === path || req.nextUrl.pathname.startsWith(path)
+  );
   const isAuthPage = authPages.some((path) =>
     req.nextUrl.pathname.startsWith(path)
   );
+
+  if (isPublicPath) {
+    return NextResponse.next();
+  }
 
   if (isLoggedIn && isAuthPage) {
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
@@ -50,6 +61,15 @@ export default async function middleware(req: NextRequest) {
 }
 
 async function verifyJWT(token: string, secret: string) {
+  if (!token || !secret) {
+    throw new Error("Missing token or secret");
+  }
+
+  const parts = token.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Invalid token format");
+  }
+
   const [header, payload, signature] = token.split(".");
   const data = `${header}.${payload}`;
 
@@ -83,5 +103,5 @@ function base64UrlDecode(str: string) {
 }
 
 export const config = {
-  matcher: ["/((?!api/inngest|api|_next/static|_next/image|favicon.ico).*)"], // Ignore Inngest API
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
