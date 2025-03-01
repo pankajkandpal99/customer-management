@@ -25,6 +25,7 @@ const LoginForm = () => {
 
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>({
@@ -39,6 +40,7 @@ const LoginForm = () => {
         throw new Error("Something went wrong");
       }
 
+      reset();
       router.push("/");
     } catch (error) {
       console.error("Error in Login Form:", error);

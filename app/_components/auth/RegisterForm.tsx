@@ -25,6 +25,7 @@ const RegisterForm = () => {
 
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormValues>({
@@ -35,10 +36,12 @@ const RegisterForm = () => {
     try {
       setLoading(true);
       const response = await registerUser(data);
-      if (!response.success) {
+
+      if (!response || !response.success) {
         throw new Error("Something went wrong");
       }
 
+      reset();
       router.push("/login");
     } catch (error) {
       console.error("Error in Login Form:", error);

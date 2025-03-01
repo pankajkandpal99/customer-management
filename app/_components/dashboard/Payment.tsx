@@ -213,8 +213,8 @@ const Payments = () => {
                       }
                       className={
                         payment.status === "Paid"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
+                          ? "bg-green-100 text-green-800 dark:bg-green-600 dark:text-green-50"
+                          : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-200"
                       }
                     >
                       {payment.status}
@@ -226,7 +226,7 @@ const Payments = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="text-green-600 border-green-600 hover:bg-green-50"
+                        className="text-green-600 border-green-600 hover:bg-green-50 dark:bg-inherit"
                         onClick={() =>
                           handleUpdatePaymentStatus(payment.id!, "Paid")
                         }
