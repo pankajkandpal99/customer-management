@@ -45,13 +45,15 @@ export const POST = async (req: NextRequest) => {
       validatedData.map(async (customer) => {
         const response = await elasticClient.index({
           index,
-          document: {
+          body: {
             ...customer,
             createdAt: new Date().toISOString(),
           },
         });
 
-        const customerId = response._id;
+        // Use response.body._id instead of response._id
+        const customerId = response.body._id;
+
         const notificationData = {
           type: "NEW_CUSTOMER",
           message: `New customer ${customer.name} added`,
@@ -65,10 +67,10 @@ export const POST = async (req: NextRequest) => {
         // Insert Notification into Elasticsearch
         const notificationResponse = await elasticClient.index({
           index: "notifications",
-          document: parsedNotification,
+          body: parsedNotification,
         });
 
-        const notificationId = notificationResponse._id;
+        const notificationId = notificationResponse.body._id;
 
         await pusher.trigger("notifications", "new-notification", {
           id: notificationId,
@@ -78,8 +80,6 @@ export const POST = async (req: NextRequest) => {
         return { id: customerId, ...customer };
       })
     );
-
-    // console.log("saved customer : ", savedCustomers);
 
     return NextResponse.json(
       { message: "Bulk upload successful", data: savedCustomers },

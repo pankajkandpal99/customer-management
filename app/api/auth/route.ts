@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { elasticClient } from "@/lib/elasticsearch";
 
 export async function GET(req: NextRequest) {
-  console.log("enter1 ");
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
 
@@ -17,7 +16,7 @@ export async function GET(req: NextRequest) {
       id,
     });
 
-    return NextResponse.json(response._source);
+    return NextResponse.json(response.body._source);
   } catch (error: any) {
     if (error.meta?.body?.found === false) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -31,7 +30,6 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  console.log("enter 2 ");
   const { email } = await req.json();
 
   if (!email) {
@@ -48,11 +46,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (response.hits.hits.length === 0) {
+    if (response.body.hits.hits.length === 0) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const user = response.hits.hits[0]._source; // Get first matched user
+    const user = response.body.hits.hits[0]._source;
     return NextResponse.json(user);
   } catch (error) {
     console.error("Error fetching user by email:", error);

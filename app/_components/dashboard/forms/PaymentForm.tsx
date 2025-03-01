@@ -49,14 +49,6 @@ const PaymentForm = ({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   if (defaultValues) {
-  //     console.log("default :", defaultValues);
-  //     setValue("customer", defaultValues.customer);
-  //     setValue("customerId", defaultValues.customerId);
-  //   }
-  // }, [defaultValues, setValue]);
-
   const handleFormSubmit: SubmitHandler<PaymentFormValues> = async (
     data: PaymentFormValues
   ) => {
@@ -79,7 +71,7 @@ const PaymentForm = ({
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className="bg-white p-6 rounded-lg space-y-6"
+      className="p-6 rounded-lg space-y-6"
       noValidate
     >
       <h2 className="text-2xl font-bold text-green-600 mb-4">
@@ -167,7 +159,7 @@ const PaymentForm = ({
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="text-green-600 border-green-600 hover:bg-green-50"
+          className="text-green-600 border-green-600 hover:bg-green-50 dark:bg-inherit"
           disabled={isLoading}
         >
           Cancel

@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const { password, ...userDetails } = user._source as { [key: string]: any };
+    const { password, ...userDetails } = user.body._source as {
+      [key: string]: any;
+    };
 
     return NextResponse.json(userDetails);
   } catch (error) {

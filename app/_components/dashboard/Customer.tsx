@@ -92,7 +92,7 @@ const CustomerTable = () => {
   }, [fetchCustomers]);
 
   return (
-    <div className="w-full p-4 shadow-md rounded-lg mt-6">
+    <div className="w-full p-4 shadow-md rounded-lg mt-6 prose dark:prose-invert">
       {isFormVisible ? (
         <CustomerForm
           onSubmit={handleAddOrUpdateCustomer}
@@ -150,29 +150,29 @@ const CustomerTable = () => {
             ) : filteredCustomers.length > 0 ? (
               <Table className="min-w-[800px]">
                 <TableHeader>
-                  <TableRow className="bg-green-50 hover:bg-green-50">
-                    <TableHead className="font-semibold text-green-800">
+                  <TableRow className="hover:bg-green-50 dark:bg-inherit dark:bg-inherit">
+                    <TableHead className="font-semibold text-green-800 dark:text-green-500">
                       ID
                     </TableHead>
-                    <TableHead className="font-semibold text-green-800">
+                    <TableHead className="font-semibold text-green-800 dark:text-green-500">
                       Name
                     </TableHead>
-                    <TableHead className="font-semibold text-green-800">
+                    <TableHead className="font-semibold text-green-800 dark:text-green-500">
                       Phone
                     </TableHead>
-                    <TableHead className="font-semibold text-green-800">
+                    <TableHead className="font-semibold text-green-800 dark:text-green-500">
                       Email
                     </TableHead>
-                    <TableHead className="font-semibold text-green-800">
+                    <TableHead className="font-semibold text-green-800 dark:text-green-500">
                       Outstanding Payment
                     </TableHead>
-                    <TableHead className="font-semibold text-green-800">
+                    <TableHead className="font-semibold text-green-800 dark:text-green-500">
                       Due Date
                     </TableHead>
-                    <TableHead className="font-semibold text-green-800">
+                    <TableHead className="font-semibold text-green-800 dark:text-green-500">
                       Status
                     </TableHead>
-                    <TableHead className="font-semibold text-green-800">
+                    <TableHead className="font-semibold text-green-800 dark:text-green-500">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -180,7 +180,10 @@ const CustomerTable = () => {
 
                 <TableBody>
                   {filteredCustomers.map((customer) => (
-                    <TableRow key={customer.id} className="hover:bg-green-50">
+                    <TableRow
+                      key={customer.id}
+                      className="hover:bg-green-50 dark:bg-inherit"
+                    >
                       <TableCell>{customer.id}</TableCell>
                       <TableCell className="font-medium">
                         {customer.name}
@@ -201,7 +204,7 @@ const CustomerTable = () => {
                           className={
                             customer.paymentStatus === "Paid"
                               ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
+                              : "bg-red-100 text-red-800 dark:text-red-500"
                           }
                         >
                           {customer.paymentStatus}

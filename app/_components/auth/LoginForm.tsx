@@ -68,7 +68,10 @@ const LoginForm = () => {
             noValidate
           >
             <div>
-              <Label htmlFor="email" className="text-gray-700">
+              <Label
+                htmlFor="email"
+                className="text-gray-700 dark:text-gray-400"
+              >
                 Email
               </Label>
               <Input
@@ -86,7 +89,10 @@ const LoginForm = () => {
 
             <div>
               <div className="flex justify-between items-center">
-                <Label htmlFor="password" className="text-gray-700">
+                <Label
+                  htmlFor="password"
+                  className="text-gray-700 dark:text-gray-400"
+                >
                   Password
                 </Label>
 

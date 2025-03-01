@@ -28,7 +28,7 @@ export async function GET(
       .get({ index, id: customerId })
       .catch(() => null);
 
-    if (!response || !response.found) {
+    if (!response || !response.body.found) {
       return NextResponse.json(
         { error: "Customer not found" },
         { status: 404 }
@@ -38,7 +38,7 @@ export async function GET(
     return NextResponse.json(
       {
         message: "Customer retrieved successfully",
-        customer: response._source,
+        customer: response.body._source,
       },
       { status: 200 }
     );
@@ -78,7 +78,7 @@ export async function PUT(
       .get({ index, id: customerId })
       .catch(() => null);
 
-    if (!existingCustomer) {
+    if (!existingCustomer || !existingCustomer.body.found) {
       return NextResponse.json(
         { error: "Customer not found" },
         { status: 404 }
@@ -97,12 +97,10 @@ export async function PUT(
       id: customerId,
     });
 
-    // console.log("Updated Customer:", updatedCustomer);
-
     return NextResponse.json(
       {
         message: "Customer updated successfully",
-        customer: updatedCustomer._source,
+        customer: updatedCustomer.body._source,
       },
       { status: 200 }
     );
@@ -138,7 +136,7 @@ export async function DELETE(
       .get({ index, id: customerId })
       .catch(() => null);
 
-    if (!existingCustomer) {
+    if (!existingCustomer || !existingCustomer.body.found) {
       return NextResponse.json(
         { error: "Customer not found" },
         { status: 404 }

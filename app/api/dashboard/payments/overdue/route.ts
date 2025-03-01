@@ -10,7 +10,7 @@ export const GET = async (req: NextRequest) => {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { hits } = await elasticClient.search({
+    const { body: { hits } } = await elasticClient.search({
       index: "payments",
       body: {
         query: {
@@ -25,7 +25,7 @@ export const GET = async (req: NextRequest) => {
     });
 
     const overdueAmount = hits.hits.reduce(
-      (sum, hit) => sum + ((hit._source as { amount: number }).amount || 0),
+      (sum: number, hit: any) => sum + ((hit._source as { amount: number }).amount || 0),
       0
     );
 

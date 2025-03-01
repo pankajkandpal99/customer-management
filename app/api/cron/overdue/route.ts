@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { elasticClient } from "@/lib/elasticsearch";
 import { pusher } from "@/lib/pusher";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const { hits } = await elasticClient.search({
+    const response = await elasticClient.search({
       index: "payments",
       body: {
         query: {
@@ -18,12 +19,17 @@ export async function GET() {
       },
     });
 
-    const overduePayments = hits.hits.map((hit) => ({
-      id: hit._id,
-      amount: (hit._source as { amount: number }).amount,
-      customer: (hit._source as { customer: string }).customer,
-      dueDate: (hit._source as { dueDate: string }).dueDate,
-    }));
+    const overduePayments = response.body.hits.hits.map(
+      (hit: {
+        _id: any;
+        _source: { amount: any; customer: any; dueDate: any };
+      }) => ({
+        id: hit._id,
+        amount: hit._source.amount,
+        customer: hit._source.customer,
+        dueDate: hit._source.dueDate,
+      })
+    );
 
     if (overduePayments.length === 0) {
       console.log("No overdue payments found.");

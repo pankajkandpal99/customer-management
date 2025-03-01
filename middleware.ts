@@ -1,12 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse, NextRequest } from "next/server";
 
 export default async function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname.startsWith("/api/inngest")) {
-    return NextResponse.next();
-  }
-
   const token = req.cookies.get("jwt")?.value;
-
   const isLoggedIn = !!token;
 
   const protectedPaths = ["/dashboard"];
@@ -14,11 +10,14 @@ export default async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith(path)
   );
 
-  const publicPaths = ["/login", "/register", "/"];
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const isPublicRoute = publicPaths.some((path) =>
+  const authPages = ["/login", "/register"];
+  const isAuthPage = authPages.some((path) =>
     req.nextUrl.pathname.startsWith(path)
   );
+
+  if (isLoggedIn && isAuthPage) {
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
+  }
 
   if (!isLoggedIn && isProtectedRoute) {
     const redirectUrl = new URL("/login", req.nextUrl.origin);

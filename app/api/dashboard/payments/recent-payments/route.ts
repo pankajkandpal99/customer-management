@@ -10,7 +10,19 @@ export const GET = async (req: NextRequest) => {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const response = await elasticClient.search({
+    const response = await elasticClient.search<{
+      hits: {
+        hits: {
+          _id: string;
+          _source: {
+            customer: string;
+            amount: number;
+            createdAt: string;
+            status: string;
+          };
+        }[];
+      };
+    }>({
       index: "payments",
       body: {
         query: { match_all: {} },
@@ -19,21 +31,12 @@ export const GET = async (req: NextRequest) => {
       },
     });
 
-    // const response = await elasticClient.search({
-    //   index: "payments",
-    //   body: {
-    //     query: { match_all: {} },
-    //     size: 1,
-    //   },
-    // });
-    // console.log("Sample payment data:", response.hits.hits[0]?._source);
-
-    if (!response.hits.hits.length) {
+    if (!response.body.hits.hits.length) {
       console.error("No recent payments found.");
       return NextResponse.json({ payments: [] }, { status: 200 });
     }
 
-    const payments = response.hits.hits.map((hit: any) => ({
+    const payments = response.body.hits.hits.map((hit) => ({
       id: hit._id,
       customer: hit._source.customer,
       amount: `₹${hit._source.amount}`,

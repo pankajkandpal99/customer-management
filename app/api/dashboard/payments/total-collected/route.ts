@@ -10,7 +10,9 @@ export const GET = async (req: NextRequest) => {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { hits } = await elasticClient.search({
+    const {
+      body: { hits },
+    } = await elasticClient.search({
       index: "payments",
       body: {
         query: { match: { status: "Paid" } },
@@ -19,7 +21,8 @@ export const GET = async (req: NextRequest) => {
     });
 
     const totalCollected = hits.hits.reduce(
-      (sum, hit) => sum + ((hit._source as { amount: number }).amount || 0),
+      (sum: number, hit: { _source: { amount: number } }) =>
+        sum + ((hit._source as { amount: number }).amount || 0),
       0
     );
 

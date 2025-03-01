@@ -33,7 +33,7 @@ export const GET = async (req: NextRequest) => {
 
     // console.log("response : ", response);
 
-    const payments = response.hits.hits.map((hit: any) => ({
+    const payments = (response.body.hits.hits as any[]).map((hit: any) => ({
       id: hit._id,
       ...hit._source,
     }));
@@ -70,10 +70,10 @@ export const POST = async (req: NextRequest) => {
 
     const response = await elasticClient.index({
       index,
-      document: parsedPayment,
+      body: parsedPayment,
     });
 
-    const paymentId = response._id;
+    const paymentId = response.body._id;
 
     const savedPayment = await elasticClient.get({
       index: "payments",
@@ -82,7 +82,7 @@ export const POST = async (req: NextRequest) => {
 
     const fullPaymentData = {
       id: paymentId,
-      ...(savedPayment._source || {}),
+      ...(savedPayment.body._source || {}),
     };
 
     const notificationType =
@@ -107,10 +107,10 @@ export const POST = async (req: NextRequest) => {
     // Save Notification in Elasticsearch
     const notificationResponse = await elasticClient.index({
       index: "notifications",
-      document: parsedNotification,
+      body: parsedNotification,
     });
 
-    const notificationId = notificationResponse._id;
+    const notificationId = notificationResponse.body._id;
 
     // Send real-time notification via Pusher
     await pusher.trigger("notifications", "new-notification", {

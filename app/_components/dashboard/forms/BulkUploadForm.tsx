@@ -55,14 +55,14 @@ const BulkUploadForm = ({ onClose }: { onClose: () => void }) => {
   }, [file, toast, onClose]);
 
   return (
-    <div className="px-2 py-4 bg-white rounded-lg">
+    <div className="px-2 py-4 rounded-lg">
       <div className="flex flex-col justify-start md:flex-row md:justify-between items-start md:items-center">
         <h2 className="text-lg font-semibold mb-4">Excel Upload Customers</h2>
 
         <Button
           variant="outline"
           onClick={handleDownloadTemplate}
-          className="mb-4 text-gray-700"
+          className="mb-4 text-gray-700 dark:text-primary"
         >
           Download Template
         </Button>

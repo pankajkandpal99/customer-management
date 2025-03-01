@@ -13,7 +13,7 @@ export const GET = async (req: NextRequest) => {
     const response = await elasticClient.count({ index: "customers" });
 
     return NextResponse.json(
-      { totalCustomers: response.count },
+      { totalCustomers: response.body.count },
       { status: 200 }
     );
   } catch (error: any) {

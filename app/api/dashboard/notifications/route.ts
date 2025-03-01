@@ -10,17 +10,21 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { hits } = await elasticClient.search({
+    const response = await elasticClient.search<Record<string, any>>({
       index: "notifications",
       size: 100,
-      query: { match_all: {} },
-      sort: [{ timestamp: { order: "desc" } }],
+      body: {
+        query: { match_all: {} },
+        sort: [{ timestamp: { order: "desc" } }],
+      },
     });
 
-    const notifications = hits.hits.map((hit) => ({
-      id: hit._id,
-      ...(typeof hit._source === "object" ? hit._source : {}),
-    }));
+    const notifications = response.body.hits.hits.map(
+      (hit: { _id: string; _source: Record<string, any> }) => ({
+        id: hit._id,
+        ...(typeof hit._source === "object" ? hit._source : {}),
+      })
+    );
 
     return NextResponse.json({ notifications }, { status: 200 });
   } catch (error: any) {

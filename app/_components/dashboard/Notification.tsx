@@ -102,7 +102,7 @@ const NotificationsCenter = () => {
   }, []);
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg max-w-[90rem] mx-auto">
+    <div className="p-6 shadow-md rounded-lg max-w-[90rem] mx-auto">
       <h2 className="text-green-600 text-2xl font-semibold mb-4 text-center">
         Notifications
       </h2>
@@ -113,7 +113,7 @@ const NotificationsCenter = () => {
         <div className="overflow-x-auto">
           <Table className="min-w-[800px]">
             <TableHeader>
-              <TableRow className="bg-green-100">
+              <TableRow className="bg-green-100 dark:bg-inherit">
                 <TableHead className="text-center">ID</TableHead>
                 <TableHead className="text-center">Message</TableHead>
                 <TableHead className="text-center">Type</TableHead>
@@ -173,7 +173,7 @@ const NotificationsCenter = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="text-green-600 border-green-600 hover:bg-green-50"
+                          className="text-green-600 border-green-600 hover:bg-green-50 dark:bg-inherit"
                           onClick={() => handleMarkAsRead(notification.id)}
                           disabled={loadingIds.includes(notification.id)}
                         >

@@ -68,7 +68,10 @@ const RegisterForm = () => {
             noValidate
           >
             <div>
-              <Label htmlFor="username" className="text-gray-700">
+              <Label
+                htmlFor="username"
+                className="text-gray-700 dark:text-gray-400"
+              >
                 Username
               </Label>
               <Input
@@ -85,7 +88,10 @@ const RegisterForm = () => {
             </div>
 
             <div>
-              <Label htmlFor="email" className="text-gray-700">
+              <Label
+                htmlFor="email"
+                className="text-gray-700 dark:text-gray-400"
+              >
                 Email
               </Label>
               <Input
@@ -103,7 +109,10 @@ const RegisterForm = () => {
 
             <div>
               <div className="flex justify-between items-center">
-                <Label htmlFor="password" className="text-gray-700">
+                <Label
+                  htmlFor="password"
+                  className="text-gray-700 dark:text-gray-400"
+                >
                   Password
                 </Label>
 
@@ -125,7 +134,10 @@ const RegisterForm = () => {
             </div>
 
             <div>
-              <Label htmlFor="confirmPassword" className="text-gray-700">
+              <Label
+                htmlFor="confirmPassword"
+                className="text-gray-700 dark:text-gray-400"
+              >
                 Confirm Password
               </Label>
               <Input

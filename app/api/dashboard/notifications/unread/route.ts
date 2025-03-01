@@ -15,7 +15,7 @@ export const GET = async () => {
       },
     });
 
-    return NextResponse.json({ unreadCount: response.count });
+    return NextResponse.json({ unreadCount: response.body.count });
   } catch (error: any) {
     console.error("Error fetching unread count:", error);
     return NextResponse.json(

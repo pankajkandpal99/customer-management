@@ -118,7 +118,7 @@ const Payments = () => {
   }, [fetchCustomerDetails, fetchPayments]);
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg max-w-[90rem] mx-auto">
+    <div className="p-6 shadow-md rounded-lg max-w-[90rem] mx-auto">
       <h2 className="text-green-600 text-2xl font-semibold mb-4 text-center">
         Payments
       </h2>
@@ -184,7 +184,7 @@ const Payments = () => {
         <div className="overflow-x-auto">
           <Table className="min-w-[800px]">
             <TableHeader>
-              <TableRow className="bg-green-100">
+              <TableRow className="bg-green-100 dark:bg-inherit">
                 <TableHead className="text-center">ID</TableHead>
                 <TableHead className="text-center">Customer</TableHead>
                 <TableHead className="text-center">Amount</TableHead>

@@ -10,7 +10,7 @@ export const GET = async (req: NextRequest) => {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { hits: paidHits } = await elasticClient.search({
+    const paidResponse: any = await elasticClient.search({
       index: "payments",
       body: {
         query: { match: { status: "Paid" } },
@@ -18,7 +18,7 @@ export const GET = async (req: NextRequest) => {
       },
     });
 
-    const { hits: allHits } = await elasticClient.search({
+    const allResponse: any = await elasticClient.search({
       index: "payments",
       body: {
         query: { match_all: {} },
@@ -26,16 +26,20 @@ export const GET = async (req: NextRequest) => {
       },
     });
 
-    const paidAmount = paidHits.hits.reduce(
-      (sum, hit) => sum + ((hit._source as { amount: number }).amount || 0),
-      0
-    );
-    const totalAmount = allHits.hits.reduce(
-      (sum, hit) => sum + ((hit._source as { amount: number }).amount || 0),
+    const paidAmount = paidResponse.hits?.hits?.reduce(
+      (sum: number, hit: any) =>
+        sum + ((hit._source as { amount: number })?.amount || 0),
       0
     );
 
-    const collectionRate = totalAmount > 0 ? ((paidAmount / totalAmount) * 100).toFixed(2) : 0;
+    const totalAmount = allResponse.hits?.hits?.reduce(
+      (sum: number, hit: any) =>
+        sum + ((hit._source as { amount: number })?.amount || 0),
+      0
+    );
+
+    const collectionRate =
+      totalAmount > 0 ? ((paidAmount / totalAmount) * 100).toFixed(2) : 0;
 
     return NextResponse.json({ collectionRate }, { status: 200 });
   } catch (error: any) {

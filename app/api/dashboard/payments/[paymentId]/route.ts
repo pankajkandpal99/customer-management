@@ -61,12 +61,12 @@ export const PUT = async (
     });
 
     const updatedPaymentData: Payment = {
-      id: updatedPayment._id,
-      customer: (updatedPayment._source as any).customer,
-      customerId: (updatedPayment._source as any).customerId,
-      amount: (updatedPayment._source as any).amount,
-      date: (updatedPayment._source as any).date,
-      status: (updatedPayment._source as any).status,
+      id: updatedPayment.body._id,
+      customer: (updatedPayment.body._source as any).customer,
+      customerId: (updatedPayment.body._source as any).customerId,
+      amount: (updatedPayment.body._source as any).amount,
+      date: (updatedPayment.body._source as any).date,
+      status: (updatedPayment.body._source as any).status,
     };
 
     // console.log("updated Payment :", updatedPaymentData);
@@ -93,10 +93,10 @@ export const PUT = async (
     // Save Notification in Elasticsearch
     const response = await elasticClient.index({
       index: "notifications",
-      document: parsedNotification,
+      body: parsedNotification,
     });
 
-    const notificationId = response._id;
+    const notificationId = response.body._id;
 
     // Send Real-Time Notification via Pusher
     await pusher.trigger("notifications", "new-notification", {

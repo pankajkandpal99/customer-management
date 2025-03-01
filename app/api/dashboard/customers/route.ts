@@ -27,10 +27,11 @@ export async function POST(req: NextRequest) {
 
     const response = await elasticClient.index({
       index,
-      document: parsedCustomer,
+      body: parsedCustomer,
     });
 
-    const customerId = response._id;
+    // Use response.body._id instead of response._id
+    const customerId = response.body._id;
 
     // Create Notification Object
     const notificationData = {
@@ -46,12 +47,10 @@ export async function POST(req: NextRequest) {
     // Insert Notification into Elasticsearch
     const notificationResponse = await elasticClient.index({
       index: "notifications",
-      document: parsedNotification,
+      body: parsedNotification,
     });
 
-    // console.log("notification res : ", notificationResponse);
-
-    const notificationId = notificationResponse._id;
+    const notificationId = notificationResponse.body._id;
 
     // Send realtime notification from pusher
     await pusher.trigger("notifications", "new-notification", {
@@ -78,13 +77,13 @@ export async function GET(req: NextRequest) {
 
     const index = "customers";
 
-    const { hits } = await elasticClient.search({
+    const response = await elasticClient.search({
       index,
       size: 1000,
-      query: { match_all: {} },
+      body: { query: { match_all: {} } },
     });
 
-    const customers = hits.hits.map((hit) => ({
+    const customers = response.body.hits.hits.map((hit: any) => ({
       id: hit._id,
       ...(typeof hit._source === "object" ? hit._source : {}),
     }));

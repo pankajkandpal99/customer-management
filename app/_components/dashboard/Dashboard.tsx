@@ -10,9 +10,6 @@ import {
   TrendingUp,
   DollarSign,
   Calendar,
-  // ArrowUpRight,
-  // Calendar,
-  // DollarSign,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { getRecentPayments } from "@/services/paymentService";
@@ -24,6 +21,15 @@ import {
   getTotalCustomers,
 } from "@/services/dashboardService";
 import Loader from "../loader";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 const DashboardCard = ({
   title,
@@ -60,7 +66,6 @@ const Dashboard = () => {
   const [totalCollected, setTotalCollected] = useState(0);
   const [collectionRate, setCollectionRate] = useState(0);
   const [loading, setLoading] = useState(true);
-
   const [inActive, setIsInActive] = useState(false);
 
   useEffect(() => {
@@ -136,7 +141,7 @@ const Dashboard = () => {
           <Button
             variant="outline"
             onClick={() => handleActiveOrNot()}
-            className="text-green-700 border-green-200 hover:bg-green-50 hover:text-green-800"
+            className="text-green-600"
           >
             <Calendar className="mr-2 h-4 w-4" />
             Today
@@ -185,129 +190,56 @@ const Dashboard = () => {
         />
       </div>
 
-      <Card className="border-green-100 shadow-sm">
+      <Card className="shadow-sm">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-green-700 flex items-center">
               <CreditCard className="mr-2 h-5 w-5 text-green-500" />
               Recent Payments
             </CardTitle>
-            <Button
-              variant="outline"
-              className="text-green-600 border-green-200 hover:bg-green-50"
-            >
+            <Button variant="outline" className="text-green-600">
               View All
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">
-                    Customer
-                  </th>
-                  <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">
-                    Amount
-                  </th>
-                  <th className="text-left py-3 px-2 text-sm font-medium text-gray-500">
-                    Date
-                  </th>
-                  <th className="text-right py-3 px-2 text-sm font-medium text-gray-500">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentPayments.map((payment) => (
-                  <tr
-                    key={payment.id}
-                    className="border-b border-gray-50 hover:bg-gray-50"
-                  >
-                    <td className="py-3 px-2 text-sm">{payment.customer}</td>
-                    <td className="py-3 px-2 text-sm font-medium">
-                      {payment.amount}
-                    </td>
-                    <td className="py-3 px-2 text-sm text-gray-500">
-                      {payment.date}
-                    </td>
-                    <td className="py-3 px-2 text-sm text-right">
-                      <span
-                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                          payment.status === "Paid"
-                            ? "bg-green-50 text-green-600"
-                            : "bg-amber-50 text-amber-600"
-                        }`}
-                      >
-                        {payment.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Customer</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {recentPayments.map((payment) => (
+                <TableRow key={payment.id}>
+                  <TableCell className="font-medium">
+                    {payment.customer}
+                  </TableCell>
+                  <TableCell>{payment.amount}</TableCell>
+                  <TableCell>{payment.date}</TableCell>
+                  <TableCell className="text-right">
+                    <Badge
+                      variant={
+                        payment.status === "Paid" ? "default" : "secondary"
+                      }
+                      className={
+                        payment.status === "Paid"
+                          ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-200"
+                          : "bg-amber-100 text-amber-600 dark:bg-amber-800 dark:text-amber-400"
+                      }
+                    >
+                      {payment.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
-
-      {/* <Card className="border-green-100 shadow-sm">
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-green-700 flex items-center">
-              <Bell className="mr-2 h-5 w-5 text-green-500" />
-              Recent Notifications
-            </CardTitle>
-            <Button
-              variant="outline"
-              className="text-green-600 border-green-200 hover:bg-green-50"
-            >
-              View All
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="divide-y divide-gray-100">
-            {notifications.map((notification) => (
-              <div
-                key={notification.id}
-                className="py-3 flex items-start gap-3 hover:bg-gray-50 px-2 rounded"
-              >
-                <div
-                  className={`mt-1 h-8 w-8 rounded-full flex items-center justify-center ${
-                    notification.type === "payment"
-                      ? "bg-green-100"
-                      : notification.type === "overdue"
-                      ? "bg-red-100"
-                      : notification.type === "customer"
-                      ? "bg-emerald-100"
-                      : "bg-gray-100"
-                  }`}
-                >
-                  {notification.type === "payment" && (
-                    <CreditCard className="h-4 w-4 text-green-600" />
-                  )}
-                  {notification.type === "overdue" && (
-                    <AlertTriangle className="h-4 w-4 text-red-600" />
-                  )}
-                  {notification.type === "customer" && (
-                    <Users className="h-4 w-4 text-emerald-600" />
-                  )}
-                  {notification.type === "system" && (
-                    <Bell className="h-4 w-4 text-gray-600" />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm">{notification.message}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {notification.time}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card> */}
     </div>
   );
 };
