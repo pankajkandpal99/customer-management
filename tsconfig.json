@@ -25,12 +25,12 @@
     ]
   },
   "include": [
-    "server.ts",
     "lib/**/*.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "services/cron/overdueCheck.mjs"  ],
+    ".next/types/**/*.ts",
+    "services/cron/overdueCheck.mjs"
+  ],
   "exclude": ["node_modules", "dist"]
 }

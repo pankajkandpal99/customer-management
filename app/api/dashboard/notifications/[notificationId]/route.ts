@@ -11,7 +11,7 @@ const markAsReadSchema = z.object({
 
 export const PUT = async (
   req: NextRequest,
-  { params }: { params: { notificationId: string } }
+  { params }: { params: Promise<{ notificationId: string }> }
 ) => {
   try {
     const user = await verifyAuth(req);

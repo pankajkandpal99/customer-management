@@ -19,7 +19,7 @@ export const PUT = async (
   {
     params,
   }: {
-    params: { paymentId: string };
+    params: Promise<{ paymentId: string }>;
   }
 ) => {
   try {

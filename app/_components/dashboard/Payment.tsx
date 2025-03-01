@@ -26,7 +26,7 @@ import { PaymentFormValues } from "@/app/lib/zodSchema";
 import { getPayments, updatePaymentStatus } from "@/services/paymentService";
 import { getSingleCustomer } from "@/services/customerService";
 
-const PaymentsPage = () => {
+const Payments = () => {
   const searchParams = useSearchParams();
   const customerId = searchParams?.get("customerId");
   const [loading, setLoading] = useState<boolean>(false);
@@ -250,7 +250,7 @@ const PaymentsPage = () => {
   );
 };
 
-export default PaymentsPage;
+export default Payments;
 
 // : (
 // <Button
