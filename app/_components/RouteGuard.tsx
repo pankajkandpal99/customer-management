@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -43,7 +42,11 @@ export default function RouteGuard({
   ]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-[69vh] flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   if (!isAuthenticated && isProtectedRoute) {

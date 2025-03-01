@@ -9,18 +9,18 @@ import { useAuth } from "@/context/AuthContext";
 import Loader from "../_components/loader";
 
 const HomePage = () => {
-  const { user, login } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const { user, login, isLoading } = useAuth();
+  const [localLoading, setLocalLoading] = useState(true);
 
   const fetchUserDetails = async () => {
     const token = getCookie("jwt") as string;
     if (!token) {
-      setLoading(false);
+      setLocalLoading(false);
       return;
     }
 
     try {
-      const decoded = JSON.parse(atob(token.split(".")[1])); // JWT decode kar raha hai
+      const decoded = JSON.parse(atob(token.split(".")[1]));
       if (!decoded?.userId) throw new Error("Invalid token");
 
       await axios.get(`/api/auth/user?userId=${decoded.userId}`);
@@ -28,15 +28,19 @@ const HomePage = () => {
     } catch (error) {
       console.error("Error fetching user details:", error);
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUserDetails();
-  }, []);
+    if (!user && !isLoading) {
+      fetchUserDetails();
+    } else {
+      setLocalLoading(false);
+    }
+  }, [user, isLoading]);
 
-  if (loading) {
+  if (localLoading || isLoading) {
     return (
       <div className="min-h-[69vh] flex items-center justify-center">
         <Loader />
@@ -90,7 +94,7 @@ const HomePage = () => {
 
             <div className="p-6 rounded-lg border shadow-md shadow-emerald-200/20">
               <div className="h-12 w-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
-                <CheckCircle className="h-6 w-12 text-emerald-600" />
+                <CheckCircle className="h-6 w-6 text-emerald-600" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Bulk Management</h3>
               <p className="text-muted-foreground text-gray-600">

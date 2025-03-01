@@ -7,63 +7,88 @@ import {
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { getCookie, setCookie, deleteCookie } from "cookies-next";
+
+interface User {
+  userId: string;
+  // Add other user properties as needed
+}
 
 interface AuthContextType {
-  isAuthenticated: boolean;
+  user: User | null;
   isLoading: boolean;
-  userId: string | null;
-  login: (token: string, userId: string) => void;
+  isAuthenticated: boolean;
+  login: (token: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
 
+  // Compute isAuthenticated based on user state
+  const isAuthenticated = !!user;
+
   useEffect(() => {
-    const checkAuth = () => {
-      const cookies = document.cookie.split(";");
-      const jwtCookie = cookies.find((cookie) =>
-        cookie.trim().startsWith("jwt=")
-      );
-
-      if (jwtCookie) {
-        // For simplicity we just check if token exists, In a real app, we might want to verify the token client-side as well
-        setIsAuthenticated(true);
-
-        // We might want to decode the JWT to get the userId, For now we'll leave it as null
-        setUserId(null);
-      } else {
-        setIsAuthenticated(false);
-        setUserId(null);
+    const checkAuth = async () => {
+      const token = getCookie("jwt") as string;
+      if (!token) {
+        setIsLoading(false);
+        return;
       }
-      setIsLoading(false);
+
+      try {
+        const decoded = JSON.parse(atob(token.split(".")[1]));
+        if (!decoded?.userId) throw new Error("Invalid token");
+
+        const response = await axios.get(
+          `/api/auth/user?userId=${decoded.userId}`
+        );
+        setUser({
+          userId: decoded.userId,
+          ...response.data,
+        });
+      } catch (error) {
+        console.error("Error verifying authentication:", error);
+        deleteCookie("jwt");
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkAuth();
   }, []);
 
-  const login = (token: string, uid: string) => {
-    document.cookie = `jwt=${token}; path=/; max-age=86400; samesite=strict`;
-    setIsAuthenticated(true);
-    setUserId(uid);
-    setIsLoading(false);
+  const login = async (token: string) => {
+    try {
+      setCookie("jwt", token, { maxAge: 86400, path: "/" });
+
+      const decoded = JSON.parse(atob(token.split(".")[1]));
+
+      setUser({
+        userId: decoded.userId,
+      });
+    } catch (error) {
+      console.error("Error during login:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const logout = () => {
-    document.cookie = "jwt=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-    setIsAuthenticated(false);
-    setUserId(null);
+    deleteCookie("jwt");
+    setUser(null);
     router.push("/login");
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, isLoading, userId, login, logout }}
+      value={{ user, isLoading, isAuthenticated, login, logout }}
     >
       {children}
     </AuthContext.Provider>
