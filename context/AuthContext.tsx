@@ -1,97 +1,79 @@
 "use client";
-import { getCookie, setCookie, deleteCookie } from "cookies-next";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
-import jwt from "jsonwebtoken";
-
-interface User {
-  userId: string;
-  email: string;
-  username?: string;
-}
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useRouter } from "next/navigation";
 
 interface AuthContextType {
-  user: User | null;
-  login: (token: string) => void;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  userId: string | null;
+  login: (token: string, userId: string) => void;
   logout: () => void;
 }
 
-const defaultAuthContext: AuthContextType = {
-  user: null,
-  login: () => {},
-  logout: () => {},
-};
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AuthContext = createContext<AuthContextType>(defaultAuthContext);
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  const decodeToken = (
-    token: string
-  ): { userId: string; email: string } | null => {
-    try {
-      const decoded = jwt.decode(token) as {
-        userId: string;
-        email: string;
-      } | null;
-      return decoded;
-    } catch (error) {
-      console.error("Error decoding token:", error);
-      return null;
-    }
-  };
-
-  const fetchUserDetails = async (userId: string) => {
-    try {
-      const response = await axios.get(`/api/auth/user?userId=${userId}`);
-      setUser(response.data);
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-      logout();
-    }
-  };
-
-  const initializeUser = async () => {
-    const token = getCookie("jwt") as string;
-    if (token) {
-      const decodedUser = decodeToken(token);
-      if (decodedUser) {
-        await fetchUserDetails(decodedUser.userId);
-      } else {
-        deleteCookie("jwt");
-      }
-    }
-  };
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userId, setUserId] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    initializeUser();
+    const checkAuth = () => {
+      const cookies = document.cookie.split(";");
+      const jwtCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith("jwt=")
+      );
+
+      if (jwtCookie) {
+        // For simplicity we just check if token exists, In a real app, we might want to verify the token client-side as well
+        setIsAuthenticated(true);
+
+        // We might want to decode the JWT to get the userId, For now we'll leave it as null
+        setUserId(null);
+      } else {
+        setIsAuthenticated(false);
+        setUserId(null);
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
-  const login = async (token: string) => {
-    setCookie("jwt", token, { maxAge: 60 * 60 * 24 * 7 });
-    const decodedUser = decodeToken(token);
-    if (decodedUser) {
-      await fetchUserDetails(decodedUser.userId);
-    }
+  const login = (token: string, uid: string) => {
+    document.cookie = `jwt=${token}; path=/; max-age=86400; samesite=strict`;
+    setIsAuthenticated(true);
+    setUserId(uid);
+    setIsLoading(false);
   };
 
   const logout = () => {
-    setUser(null);
-    deleteCookie("jwt");
+    document.cookie = "jwt=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    setIsAuthenticated(false);
+    setUserId(null);
+    router.push("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, isLoading, userId, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-};
+}

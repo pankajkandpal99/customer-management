@@ -27,10 +27,12 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (isLoggedIn && isAuthPage) {
+    console.log("wrong direction");
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
   }
 
   if (!isLoggedIn && isProtectedRoute) {
+    console.log("enter unauthorize user.");
     const redirectUrl = new URL("/login", req.nextUrl.origin);
     redirectUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);

@@ -22,6 +22,12 @@ const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
   const router = useRouter();
   const { user, logout } = useAuth();
 
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+    router.refresh();
+  };
+
   const defaultAvatar =
     "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
   const userAvatar = user
@@ -88,10 +94,7 @@ const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
           </div>
           <div className="lg:hidden w-full">
             <Button
-              onClick={() => {
-                logout();
-                router.push("/");
-              }}
+              onClick={handleLogout}
               className={cn("text-base", isMobile && "w-full")}
             >
               Sign Out

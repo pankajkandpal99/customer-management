@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/general/ThemeProvider";
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
+import RouteGuard from "./_components/RouteGuard";
 
 export const metadata: Metadata = {
   title: "Customer Management",
@@ -21,15 +22,17 @@ export default function RootLayout({
         className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster />
-          </ThemeProvider>
+          <RouteGuard>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <Toaster />
+            </ThemeProvider>
+          </RouteGuard>
         </AuthProvider>
       </body>
     </html>
