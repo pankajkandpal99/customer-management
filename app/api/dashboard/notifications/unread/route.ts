@@ -4,7 +4,19 @@ import { NextResponse } from "next/server";
 
 export const GET = async () => {
   try {
-    const response = await elasticClient.count({
+    const { body: indexExists } = await elasticClient.indices.exists({
+      index: "notifications",
+    });
+
+    if (!indexExists) {
+      console.error('Index "notifications" does not exist.');
+      return NextResponse.json(
+        { error: "Notifications index does not exist" },
+        { status: 500 }
+      );
+    }
+
+    const { body: response } = await elasticClient.count({
       index: "notifications",
       body: {
         query: {
@@ -15,11 +27,11 @@ export const GET = async () => {
       },
     });
 
-    return NextResponse.json({ unreadCount: response.body.count });
+    return NextResponse.json({ unreadCount: response.count });
   } catch (error: any) {
-    console.error("Error fetching unread count:", error);
+    console.error("Error fetching unread count 2:", error);
     return NextResponse.json(
-      { error: "Failed to fetch unread count" },
+      { error: "Failed to fetch unread count 1" },
       { status: 500 }
     );
   }

@@ -25,7 +25,7 @@ const NavItem = ({ item, isMobile = false }: NavItemProps) => {
       const response = await axios.get("/api/dashboard/notifications/unread");
       setUnreadCount(response.data.unreadCount);
     } catch (error) {
-      console.error("Error fetching unread count:", error);
+      console.error("Error fetching unread count 3:", error);
     }
   };
 
