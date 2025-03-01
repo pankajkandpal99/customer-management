@@ -48,7 +48,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -144,7 +144,7 @@ const RegisterForm = () => {
             <Button
               type="submit"
               className="w-full px-4 py-2 bg-primary text-primary-foreground rounded transition-all hover:bg-primary/90"
-              disabled={loading} // ✅ Disable button during loading
+              disabled={loading}
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

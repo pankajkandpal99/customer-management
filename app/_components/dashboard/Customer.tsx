@@ -92,7 +92,7 @@ const CustomerTable = () => {
   }, [fetchCustomers]);
 
   return (
-    <div className="w-full p-4 bg-white shadow-md rounded-lg mt-6">
+    <div className="w-full p-4 shadow-md rounded-lg mt-6">
       {isFormVisible ? (
         <CustomerForm
           onSubmit={handleAddOrUpdateCustomer}

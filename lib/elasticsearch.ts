@@ -22,4 +22,7 @@ export const elasticClient = new Client({
           password: process.env.ELASTICSEARCH_PROD_PASSWORD ?? "changeme",
         }
       : undefined,
+  headers: {
+    Accept: "application/json", // Set Accept header to application/json
+  },
 });

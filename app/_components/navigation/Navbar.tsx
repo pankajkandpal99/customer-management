@@ -1,5 +1,4 @@
 "use client";
-// import { ThemeToggle } from "@/components/general/ThemeToggle";
 import { NAV_ITEMS } from "./config";
 import NavItem from "./NavItem";
 import AuthButtons from "../auth/AuthButtons";
@@ -8,6 +7,7 @@ import MobileMenu from "./MobileMenu";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileText, Menu } from "lucide-react";
+import { ThemeToggle } from "@/components/general/ThemeToggle";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,8 +30,6 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-6">
-          {/* <ThemeToggle /> */}
-
           <Link
             href="/api-docs"
             className="flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors hover:bg-emerald-100/10 text-emerald-500 hover:text-emerald-400 font-medium"
@@ -40,6 +38,7 @@ const Navbar = () => {
             <span>API Docs</span>
           </Link>
 
+          <ThemeToggle />
           <div className="hidden lg:flex items-center gap-4">
             <AuthButtons />
           </div>
