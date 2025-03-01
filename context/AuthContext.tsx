@@ -12,6 +12,8 @@ import { getCookie, setCookie, deleteCookie } from "cookies-next";
 
 interface User {
   userId: string;
+  username: string | null;
+  email: string | null;
   // Add other user properties as needed
 }
 
@@ -72,6 +74,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser({
         userId: decoded.userId,
+        username: decoded.username || null,
+        email: decoded.email || null,
       });
     } catch (error) {
       console.error("Error during login:", error);
