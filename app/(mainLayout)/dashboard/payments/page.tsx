@@ -4,7 +4,7 @@ import React, { Suspense } from "react";
 const PaymentPage = () => {
   return (
     <Suspense fallback={<div>Loading Payments...</div>}>
-      <Payments />;
+      <Payments />
     </Suspense>
   );
 };
