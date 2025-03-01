@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mini Collection Management System
+
+## Overview
+
+The **Mini Collection Management System** is a full-stack application designed to manage customer payments and notifications. It includes features like customer management, payment tracking, real-time notifications, and bulk customer uploads via Excel. The system is built using **Next.js** with the App Router, **TypeScript**, and **Elasticsearch** as the database. Real-time updates are handled using **Pusher**, and the UI is styled using **shadcn** with **TailwindCSS**.
+
+---
+
+## Features
+
+### 1. **Authentication System**
+
+- User registration and login functionality.
+- **JWT-based authentication** for secure access.
+
+### 2. **Customer Management**
+
+- **CRUD operations** for customer details:
+  - Name
+  - Contact information
+  - Outstanding payment amount
+  - Payment due date
+  - Payment status
+- **Bulk customer upload** via Excel:
+  - Template provided for upload.
+  - Data validation before import.
+  - Import success/error summary.
+- **List view** with filtering and sorting options.
+
+### 3. **Payment Management**
+
+- Mock payment API endpoint.
+- Mark payments as completed/pending.
+- **Real-time payment status updates** using WebSocket.
+
+### 4. **Notification System**
+
+- **Real-time notifications** using WebSocket:
+  - Payment received
+  - Payment overdue
+  - New customer added
+- **Notification center** to view all notifications.
+
+### 5. **API Documentation**
+
+- **Swagger/OpenAPI** documentation for all API endpoints.
+
+---
+
+## Technologies Used
+
+### Frontend
+
+- **Next.js** (App Router)
+- **TypeScript**
+- **shadcn** for UI components
+- **TailwindCSS** for styling
+- **React Hook Form** with **Zod** for form validation
+- **Axios** for API requests
+- **Pusher** for real-time notifications
+
+### Backend
+
+- **Node.js** with **Next.js API routes**
+- **Elasticsearch** for database
+- **JWT** for authentication
+- **Node-cron** for scheduling overdue payment checks (local testing)
+- **Vercel** for production deployment
+
+### Other Libraries
+
+- **Swagger UI** for API documentation
+- **Sonner** for toast notifications
+- **Lucide React** for icons
+- **XLSX** for Excel file handling
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (v18 or higher)
+- Elasticsearch (local or cloud instance)
+- Pusher account (for real-time notifications)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Steps
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/customer-management.git
+   cd customer-management
+   ```
