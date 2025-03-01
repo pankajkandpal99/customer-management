@@ -33,22 +33,17 @@ export async function POST(request: Request) {
       },
     });
 
-    if (!searchResponse.hits.hits.length) {
+    // Use searchResponse.body.hits.hits instead of searchResponse.hits.hits
+    if (!searchResponse.body.hits.hits.length) {
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }
       );
     }
 
-    const userId = searchResponse.hits.hits[0]._id;
-    const user = searchResponse.hits.hits[0]._source as User;
+    const userId = searchResponse.body.hits.hits[0]._id;
+    const user = searchResponse.body.hits.hits[0]._source as User;
 
-    if (!user) {
-      return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 }
-      );
-    }
     if (!user) {
       return NextResponse.json(
         { error: "Invalid email or password" },
@@ -63,9 +58,6 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
-
-    // console.log("user : ", user);
-    // console.log("userId : ", userId);
 
     const token = jwt.sign(
       { userId, email: user.email },

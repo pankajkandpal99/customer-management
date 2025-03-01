@@ -26,10 +26,10 @@ export async function POST(req: Request) {
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
-    await elasticClient.index({
+    const indexResponse = await elasticClient.index({
       index: "users",
       id: userId,
-      document: {
+      body: {
         username,
         email,
         password: hashedPassword,
@@ -37,6 +37,11 @@ export async function POST(req: Request) {
         updatedAt,
       },
     });
+
+    // Check if the document was successfully indexed
+    if (indexResponse.body.result !== "created") {
+      throw new Error("Failed to index user document");
+    }
 
     // console.log("User registered successfully: ");
 
